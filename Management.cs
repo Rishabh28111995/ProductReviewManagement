@@ -1,0 +1,61 @@
+﻿using System;
+namespace LambdaLinq_Demo
+{
+	public class Management
+	{
+		public void TopRecord(List<ProductReview> products)
+		{
+			var result = products.OrderByDescending(x => x.Rating).Take(3);
+			var record = (from product in products orderby product.Review descending select product);
+			Console.WriteLine("using LinQ");
+			Console.WriteLine("-----------");
+			foreach(var prod in record)
+			{
+				Console.WriteLine(prod.ProductId + " " + prod.UserId + " " + prod.Rating + " " + prod.Review + " " + prod.IsLike);
+			}
+			Console.WriteLine("using Lambda");
+			Console.WriteLine("-----------");
+			foreach(var prod in result)
+			{
+				Console.WriteLine(prod.ProductId+" "+ prod.UserId+" "+ prod.Rating+ " "+ prod.Review+" "+ prod.IsLike);
+			}
+		}
+		public void ProductRating(List<ProductReview> products)
+		{
+			var result = products.Where(x => x.Rating > 3 && (x.ProductId == 1 || x.ProductId == 4 || x.ProductId == 9));
+			var record = from product in products where (product.ProductId == 1 || product.ProductId == 4 || product.ProductId == 9) && product.Rating > 3 select product;
+			//Display(result);
+            foreach (var prod in result)
+            {
+                Console.WriteLine(prod.ProductId + " " + prod.UserId + " " + prod.Rating + " " + prod.Review + " " + prod.IsLike);
+
+            }
+
+        }
+
+		public void Display(IEnumerable<ProductReview> result)
+		{
+			foreach(var prod in result)
+			{
+                Console.WriteLine(prod.ProductId + " " + prod.UserId + " " + prod.Rating + " " + prod.Review + " " + prod.IsLike);
+
+            }
+
+		}
+		public void CountProduct(List<ProductReview> products)
+		{
+			var result = products.GroupBy(x => x.ProductId);
+			var record = products.GroupBy(x => x.ProductId).Select(x => new { ProductId = x.Key, Count = x.Count() });
+			foreach(var prod in record)
+			{
+				Console.WriteLine(prod.ProductId+ " "+prod.Count);
+			}
+			foreach(var product in result)
+			{
+				Console.WriteLine(product.Key +" "+ product.Count());
+			}
+		}
+
+	}
+}
+
